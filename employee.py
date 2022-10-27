@@ -101,6 +101,137 @@ class employeeClass:
 
         self.show()
 #========================================================================================
+ 
+    def add(self):
+        con=sqlite3.connect(database=r'inventorymanagementsystem.db')
+        cur=con.cursor()
+        try:
+            if self.var_emp_id.get()=="":
+                messagebox.showerror("Error","Employee ID Must be Required",parent=self.root)
+            else:
+                cur.execute("Select * from employee where eid=?",(self.var_emp_id.get(),))  
+                row=cur.fetchone()
+                if row!=None:
+                    messagebox.showerror("Error","This Employee ID already assigned, try different",parent=self.root)  
+                else:
+                    cur.execute("Insert into employee(eid,name,email,utype,salary)values(?,?,?,?,?)",(
+                                     self.var_emp_id.get(),
+                                     self.var_name.get(),
+                                     self.var_email.get(),
+                                     self.var_utype.get(),
+                                     self.var_salary.get(),
+                    ))
+                    con.commit()
+                    messagebox.showinfo("Success","Employee Added Successfully",parent=self.root)
+                    self.show()
+        except Exception as ex:
+            messagebox.showerror("Error",f"Error due to : {str(ex)}",parent=self.root)
+  
+
+    def show(self):  
+        con=sqlite3.connect(database=r'inventorymanagementsystem.db')
+        cur=con.cursor()
+        try: 
+            cur.execute("select * from employee")
+            rows=cur.fetchall()
+            self.EmployeeTable.delete(*self.EmployeeTable.get_children()) 
+            for row in rows:
+                self.EmployeeTable.insert('',END,values=row)
+        except Exception as ex:
+            messagebox.showerror("Error",f"Error due to : {str(ex)}",parent=self.root)
+
+
+    def get_data(self,ev):
+        f=self.EmployeeTable.focus()
+        content=(self.EmployeeTable.item(f))
+        row=content['values']
+        # print(row)        
+        self.var_emp_id.set(row[0])
+        self.var_name.set(row[1])
+        self.var_email.set(row[2])
+        self.var_utype.set(row[3])
+        self.var_salary.set(row[4])    
+             
+    def update(self):
+        con=sqlite3.connect(database=r'inventorymanagementsystem.db')
+        cur=con.cursor()
+        try:
+            if self.var_emp_id.get()=="":
+                messagebox.showerror("Error","Employee ID Must be Required",parent=self.root)
+            else:
+                cur.execute("Select * from employee where eid=?",(self.var_emp_id.get(),))  
+                row=cur.fetchone()
+                if row==None:
+                    messagebox.showerror("Error","Invalid Employee ID",parent=self.root)  
+                else:
+                    cur.execute("Update employee set name=?,email=?,utype=?,salary=? where eid=?",(
+                                     self.var_name.get(),
+                                     self.var_email.get(),
+                                     self.var_utype.get(),
+                                     self.var_salary.get(),
+                                      self.var_emp_id.get(),
+                    ))
+                    con.commit()
+                    messagebox.showinfo("Success","Employee Updated Successfully",parent=self.root)
+                    self.show()
+        except Exception as ex:
+            messagebox.showerror("Error",f"Error due to : {str(ex)}",parent=self.root)
+
+
+    def delete(self):
+        con=sqlite3.connect(database=r'inventorymanagementsystem.db')
+        cur=con.cursor()
+        try:
+            if self.var_emp_id.get()=="":
+                messagebox.showerror("Error","Employee ID Must be Required",parent=self.root)
+            else:
+                cur.execute("Select * from employee where eid=?",(self.var_emp_id.get(),))  
+                row=cur.fetchone()
+                if row==None:
+                    messagebox.showerror("Error","Invalid Employee ID",parent=self.root)  
+                else:
+                    op=messagebox.askyesno("Confirm","Do You Really Want To Delete?",parent=self.root)
+                    if op==True:
+                        cur.execute("delete from employee where eid=?",(self.var_emp_id.get(),))
+                        con.commit()
+                        messagebox.showinfo("Delete","Employee Deleted successfully",parent=self.root)
+                        self.clear()
+        except Exception as ex:
+            messagebox.showerror("Error",f"Error due to : {str(ex)}",parent=self.root)
+    
+    def clear(self):
+        self.var_emp_id.set("")
+        self.var_name.set("")
+        self.var_email.set("")
+        self.var_utype.set("Admin")
+        self.var_salary.set("")
+        self.var_searchtxt.set("")
+        self.var_searchby.set("Select")
+        self.show()
+
+    def search(self):
+        con=sqlite3.connect(database=r'inventorymanagementsystem.db')
+        cur=con.cursor()
+        try: 
+            if self.var_searchby.get()=="Select":
+                messagebox.showerror("Error","Select Search By Option",parent=self.root)
+            elif self.var_searchtxt.get()=="":
+                messagebox.showerror("Error","Select input should be required",parent=self.root)    
+
+            else:    
+                cur.execute("select * from employee where "+self.var_searchby.get()+" LIKE '%"+self.var_searchtxt.get()+"%'")
+                rows=cur.fetchall()
+                if len(rows)!=0:
+                   self.EmployeeTable.delete(*self.EmployeeTable.get_children()) 
+                   for row in rows:
+                       self.EmployeeTable.insert('',END,values=row)
+                else:
+                    messagebox.showerror("Error","No Record Found!!!",parent=self.root)       
+        except Exception as ex:
+            messagebox.showerror("Error",f"Error due to : {str(ex)}",parent=self.root)
+
+
+
        
 if __name__=="__main__":
      root=Tk()
