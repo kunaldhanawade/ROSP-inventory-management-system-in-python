@@ -62,6 +62,44 @@ class salesClass:
         lbl_image.place(x=700,y=110)
         
         self.show()
+ 
+# ===============================================================
+    def show(self):
+        del self.bill_list[:]
+        self.sales_List.delete(0,END)
+        for i in os.listdir('bill'):
+            if i.split('.')[-1]=='txt':
+                self.sales_List.insert(END,i)
+                self.bill_list.append(i.split('.')[0])
+
+
+    def get_data(self,ev):
+        index_=self.sales_List.curselection()
+        file_name = self.sales_List.get(index_)
+        # print(file_name)
+        self.bill_area.delete(0,END)
+        fp= open(f'bill/{file_name}','r')
+        for i in fp:
+            self.bill_area.insert(END,i)
+        fp.close()
+
+    def search(self):  
+        if self.var_invoice.get()=="":
+            messagebox.showerror("Error","Invoice no. should be required", parent = self.root)
+        else:
+            if self.var_invoice.get() in self.bill_list:
+                # print("yes")
+                fp=open(f'bill/{self.var_invoice.get()}.txt','r')
+                self.bill_area.delete(0,END)
+                for i in fp:
+                  self.bill_area.insert(END,i)
+                fp.close()
+            else:
+             messagebox.showerror("Error","Invalid Invoice No.", parent = self.root)
+
+    def clear(self):
+        self.show()
+        self.bill_area.delete(0,END)        
 
 if __name__=="__main__":
      root=Tk()
