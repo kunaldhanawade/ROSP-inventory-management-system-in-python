@@ -1,0 +1,9 @@
+Inventory Management System project is written in Python using Tkinter. This is a simple GUI based project which is easy to understand and use. Talking about the system, it contains all the required functions which include adding, viewing, deleting and updating employee details and products.
+
+While adding the Employee details, the admin has to enter the Employee ID, Name, Email, Type and Salary. The employee details can also be Updated as well as Deleted. The system shows the inventory record in a Tabular form. The user can Search for an employee as it contains a search function too.
+
+While adding the Product details, the admin has to enter the Product Name, Price, Quantity and Status. The product details can also be Updated as well as Deleted. The system shows the inventory record in a Tabular form. The user can Search for an item as it contains a search function too.
+
+In the Sales Tab, the system shows all the bills in a Tabular form. The user can Search for a bill as it contains a search function too.
+
+The project is made using Python Language and SQLLite Database. Python is one of the widely used language. Its Tkinter library for creating GUI has a lot of key widgets. The SQLLite database is a simple, lightweight database suitable for small applications.
